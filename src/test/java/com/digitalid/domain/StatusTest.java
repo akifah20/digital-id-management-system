@@ -44,4 +44,39 @@ class StatusTest {
         assertFalse(Status.ACTIVE.isTerminal());
         assertFalse(Status.SUSPENDED.isTerminal());
     }
+
+    // transition tests
+    @Test
+    void activeShouldTransitionToOtherStates() {
+        assertTrue(Status.ACTIVE.canChangeTo(Status.SUSPENDED));
+        assertTrue(Status.ACTIVE.canChangeTo(Status.REVOKED));
+        assertTrue(Status.ACTIVE.canChangeTo(Status.EXPIRED));
+    }
+
+    @Test
+    void suspendedShouldTransitionToOtherStates() {
+        assertTrue(Status.SUSPENDED.canChangeTo(Status.ACTIVE));
+        assertTrue(Status.SUSPENDED.canChangeTo(Status.REVOKED));
+        assertTrue(Status.SUSPENDED.canChangeTo(Status.EXPIRED));
+    }
+
+    @Test
+    void terminalStatesShouldNotTransition() {
+        assertFalse(Status.REVOKED.canChangeTo(Status.ACTIVE));
+        assertFalse(Status.REVOKED.canChangeTo(Status.SUSPENDED));
+        assertFalse(Status.EXPIRED.canChangeTo(Status.ACTIVE));
+        assertFalse(Status.EXPIRED.canChangeTo(Status.SUSPENDED));
+    }
+
+    @Test
+    void shouldNotTransitionToSameState() {
+        assertFalse(Status.ACTIVE.canChangeTo(Status.ACTIVE));
+        assertFalse(Status.SUSPENDED.canChangeTo(Status.SUSPENDED));
+    }
+
+    @Test
+    void shouldNotTransitionToNull() {
+        assertFalse(Status.ACTIVE.canChangeTo(null));
+        assertFalse(Status.SUSPENDED.canChangeTo(null));
+    }
 }

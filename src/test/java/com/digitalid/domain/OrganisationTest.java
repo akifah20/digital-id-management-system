@@ -40,8 +40,6 @@ class OrganisationTest {
         assertNotEquals(org1.getId(), org2.getId());
     }
 
-    // === Validation tests ===
-
     @Test
     void shouldRejectNullId() {
         assertThrows(IllegalArgumentException.class,
@@ -90,8 +88,6 @@ class OrganisationTest {
         assertEquals("HMRC", org.getName());
     }
 
-    // canManageIdentities helper
-
     @Test
     void centralAuthorityShouldManageIdentities() {
         Organisation org = new Organisation("Home Office", OrganisationType.CENTRAL_AUTHORITY);
@@ -107,7 +103,6 @@ class OrganisationTest {
         assertFalse(tax.canManageIdentities());
     }
 
-    // check if orgs + hashcode are equal/ comparison
     @Test
     void organisationsWithSameIdShouldBeEqual() {
         Organisation org1 = new Organisation("org-123", "HMRC", OrganisationType.TAX_AUTHORITY);
@@ -136,8 +131,6 @@ class OrganisationTest {
         Organisation org = new Organisation("HMRC", OrganisationType.TAX_AUTHORITY);
         assertNotEquals(org, null);
     }
-
-    // toString test
 
     @Test
     void toStringShouldContainKeyFields() {

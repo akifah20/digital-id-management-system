@@ -85,6 +85,27 @@ public class DigitalID {
         return lastModifiedDate;
     }
 
+    /**
+     * updates status of this Digital ID.
+     * Validates that the transition is allowed using {@link Status#canChangeTo(Status)}.
+     *
+     * @param newStatus the new status
+     * @throws IllegalArgumentException if newStatus is null
+     * @throws IllegalStateException if the transition is not allowed
+     *         (e.g. trying to update a REVOKED ID, or moving to the same state)
+     */
+    public void changeStatus(Status newStatus) {
+        if (newStatus == null) {
+            throw new IllegalArgumentException("New status cannot be null");
+        }
+        if (!status.canChangeTo(newStatus)) {
+            throw new IllegalStateException(
+                String.format("Cannot change status from %s to %s", status, newStatus));
+        }
+        this.status = newStatus;
+        this.lastModifiedDate = LocalDateTime.now();
+    }
+
     private static String generateIdNumber() {
         return "DID-" + UUID.randomUUID().toString().substring(0, 8).toUpperCase();
     }

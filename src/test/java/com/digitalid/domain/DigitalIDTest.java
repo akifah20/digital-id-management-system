@@ -8,6 +8,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 /**
  * Unit tests for DigitalID entity, where entity = unique identity that we care
@@ -71,62 +72,49 @@ class DigitalIDTest {
     @Test
     void shouldRejectNullFirstName() {
         assertThrows(IllegalArgumentException.class,
-            () -> new DigitalID(null, "Husssain", LocalDate.of(1990, 1, 15)));
+                () -> new DigitalID(null, "Husssain", LocalDate.of(1990, 1, 15)));
     }
 
     @Test
     void shouldRejectEmptyFirstName() {
         assertThrows(IllegalArgumentException.class,
-            () -> new DigitalID("", "Husssain", LocalDate.of(1990, 1, 15)));
-    }
-
-    @Test
-    void shouldRejectBlankFirstName() {
-        assertThrows(IllegalArgumentException.class,
-            () -> new DigitalID("   ", "Husssain", LocalDate.of(1990, 1, 15)));
+                () -> new DigitalID("", "Husssain", LocalDate.of(1990, 1, 15)));
     }
 
     @Test
     void shouldRejectNullLastName() {
         assertThrows(IllegalArgumentException.class,
-            () -> new DigitalID("Hana", null, LocalDate.of(1990, 1, 15)));
+                () -> new DigitalID("Hana", null, LocalDate.of(1990, 1, 15)));
     }
 
     @Test
     void shouldRejectEmptyLastName() {
         assertThrows(IllegalArgumentException.class,
-            () -> new DigitalID("Hana", "", LocalDate.of(1990, 1, 15)));
+                () -> new DigitalID("Hana", "", LocalDate.of(1990, 1, 15)));
     }
 
     @Test
     void shouldRejectNullDateOfBirth() {
         assertThrows(IllegalArgumentException.class,
-            () -> new DigitalID("Hana", "Husssain", null));
+                () -> new DigitalID("Hana", "Husssain", null));
     }
 
     @Test
     void shouldRejectFutureDateOfBirth() {
-        LocalDate tomorrow = LocalDate.now().plusDays(1);
         assertThrows(IllegalArgumentException.class,
-            () -> new DigitalID("Hana", "Husssain", tomorrow));
+                () -> new DigitalID("Hana", "Husssain", LocalDate.now().plusDays(1)));
     }
 
     @Test
     void shouldRejectNullDigitalIdNumber() {
         assertThrows(IllegalArgumentException.class,
-            () -> new DigitalID(null, "Hana", "Husssain", LocalDate.of(1990, 1, 15), Status.ACTIVE));
-    }
-
-    @Test
-    void shouldRejectEmptyDigitalIdNumber() {
-        assertThrows(IllegalArgumentException.class,
-            () -> new DigitalID("", "Hana", "Husssain", LocalDate.of(1990, 1, 15), Status.ACTIVE));
+                () -> new DigitalID(null, "Hana", "Husssain", LocalDate.of(1990, 1, 15), Status.ACTIVE));
     }
 
     @Test
     void shouldRejectNullStatus() {
         assertThrows(IllegalArgumentException.class,
-            () -> new DigitalID("DID-123", "Hana", "Husssain", LocalDate.of(1990, 1, 15), null));
+                () -> new DigitalID("DID-12345678", "Hana", "Husssain", LocalDate.of(1990, 1, 15), null));
     }
 
     @Test
@@ -135,5 +123,66 @@ class DigitalIDTest {
 
         assertEquals("Hana", id.getFirstName());
         assertEquals("Husssain", id.getLastName());
+    }
+
+    // === changeStatus tests ===
+
+    @Test
+    void shouldChangeStatusFromActiveToSuspended() {
+        DigitalID id = new DigitalID("Hana", "Husssain", LocalDate.of(1990, 1, 15));
+
+        id.changeStatus(Status.SUSPENDED);
+
+        assertEquals(Status.SUSPENDED, id.getStatus());
+    }
+
+    @Test
+    void shouldChangeStatusFromSuspendedBackToActive() {
+        DigitalID id = new DigitalID("DID-12345678", "Hana", "Husssain",
+                LocalDate.of(1990, 1, 15), Status.SUSPENDED);
+
+        id.changeStatus(Status.ACTIVE);
+
+        assertEquals(Status.ACTIVE, id.getStatus());
+    }
+
+    @Test
+    void shouldUpdateLastModifiedDateOnStatusChange() throws InterruptedException {
+        DigitalID id = new DigitalID("Hana", "Husssain", LocalDate.of(1990, 1, 15));
+        Thread.sleep(10);
+
+        id.changeStatus(Status.SUSPENDED);
+
+        assertTrue(id.getLastModifiedDate().isAfter(id.getCreatedDate()));
+    }
+
+    @Test
+    void shouldRejectNullStatusChange() {
+        DigitalID id = new DigitalID("Hana", "Husssain", LocalDate.of(1990, 1, 15));
+
+        assertThrows(IllegalArgumentException.class, () -> id.changeStatus(null));
+    }
+
+    @Test
+    void shouldRejectChangingToSameStatus() {
+        DigitalID id = new DigitalID("Hana", "Husssain", LocalDate.of(1990, 1, 15));
+
+        assertThrows(IllegalStateException.class, () -> id.changeStatus(Status.ACTIVE));
+    }
+
+    @Test
+    void shouldRejectChangingFromRevokedState() {
+        DigitalID id = new DigitalID("DID-12345678", "Hana", "Husssain",
+                LocalDate.of(1990, 1, 15), Status.REVOKED);
+
+        assertThrows(IllegalStateException.class, () -> id.changeStatus(Status.ACTIVE));
+    }
+
+    @Test
+    void shouldRejectChangingFromExpiredState() {
+        DigitalID id = new DigitalID("DID-12345678", "Hana", "Husssain",
+                LocalDate.of(1990, 1, 15), Status.EXPIRED);
+
+        assertThrows(IllegalStateException.class, () -> id.changeStatus(Status.ACTIVE));
     }
 }

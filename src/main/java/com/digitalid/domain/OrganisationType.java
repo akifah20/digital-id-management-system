@@ -12,13 +12,25 @@ public enum OrganisationType {
 
     /**
      * The central authority - home
-     * Solely responsible for creating, updating, and changing the status of Digital
-     * IDs.
+     * creates,updates & changes status of IDs.
      */
-    CENTRAL_AUTHORITY, // creating, updating + changing status of IDs
-    TAX_AUTHORITY, // verifies identities for tax purposes.
-    DRIVING_LICENCE_AUTHORITY, // verifies identities for licensing
-    BANK, // verifies identity validity for financial services
-    EMPLOYER, // verifies identity validity for employment
-    WELFARE_SERVICE // verifies identities for benefits
+    CENTRAL_AUTHORITY("Central Authority"), // creating, updating + changing status of IDs
+    TAX_AUTHORITY("Tax Authority"), // verifies identities for tax purposes.
+    DRIVING_LICENCE_AUTHORITY("Driving Licence Authority"), // verifies identities for licensing
+    BANK("Bank"), // verifies identity validity for financial services
+    EMPLOYER("Employer"), // verifies identity validity for employment
+    WELFARE_SERVICE("Welfare Service"); // verifies identities for benefits
+
+    private final String displayName;
+
+    OrganisationType(String displayName) {
+        this.displayName = displayName;
+    }
+
+    /**
+     * @return easy to read name of the org type
+     */
+    public String getDisplayName() {
+        return displayName;
+    }
 }

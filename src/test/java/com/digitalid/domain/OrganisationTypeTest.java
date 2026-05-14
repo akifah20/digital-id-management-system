@@ -3,7 +3,9 @@ package com.digitalid.domain;
 import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 /**
  * Unit tests OrganisationType
@@ -42,5 +44,21 @@ class OrganisationTypeTest {
         for (OrganisationType type : OrganisationType.values()) {
             assertNotNull(type.getDisplayName());
         }
+    }
+
+    // Permissiontests
+
+    @Test
+    void onlyCentralAuthorityShouldManageIdentities() {
+        assertTrue(OrganisationType.CENTRAL_AUTHORITY.canManageIdentities());
+    }
+
+    @Test
+    void otherOrganisationTypesShouldNotManageIdentities() {
+        assertFalse(OrganisationType.TAX_AUTHORITY.canManageIdentities());
+        assertFalse(OrganisationType.DRIVING_LICENCE_AUTHORITY.canManageIdentities());
+        assertFalse(OrganisationType.BANK.canManageIdentities());
+        assertFalse(OrganisationType.EMPLOYER.canManageIdentities());
+        assertFalse(OrganisationType.WELFARE_SERVICE.canManageIdentities());
     }
 }

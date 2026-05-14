@@ -38,7 +38,7 @@
                 <artifactId>exec-maven-plugin</artifactId>
                 <version>3.1.0</version>
                 <configuration>
-                    <mainClass>digitalid.App</mainClass>
+                    <mainClass>com.digitalid.App</mainClass>
                 </configuration>
             </plugin>
 
@@ -50,7 +50,7 @@
                 <configuration>
                     <archive>
                         <manifest>
-                            <mainClass>digitalid.App</mainClass>
+                            <mainClass>com.digitalid.App</mainClass>
                         </manifest>
                     </archive>
                 </configuration>

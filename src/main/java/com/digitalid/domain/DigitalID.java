@@ -21,18 +21,36 @@ public class DigitalID {
     private Status status;
     private LocalDateTime lastModifiedDate;
 
-    //Creates a new Digital ID
+    // Creates a new Digital ID
     public DigitalID(String firstName, String lastName, LocalDate dateOfBirth) {
         this(generateIdNumber(), firstName, lastName, dateOfBirth, Status.ACTIVE);
     }
 
-    
     // Reconstructs an existing Digital ID when ID number & status are already known
     public DigitalID(String digitalIdNumber, String firstName, String lastName,
             LocalDate dateOfBirth, Status status) {
+        if (digitalIdNumber == null || digitalIdNumber.trim().isEmpty()) {
+            throw new IllegalArgumentException("Digital ID number cannot be null or empty!");
+        }
+        if (firstName == null || firstName.trim().isEmpty()) {
+            throw new IllegalArgumentException("First name cannot be null or empty!");
+        }
+        if (lastName == null || lastName.trim().isEmpty()) {
+            throw new IllegalArgumentException("Last name cannot be null or empty!");
+        }
+        if (dateOfBirth == null) {
+            throw new IllegalArgumentException("Date of birth cannot be null!");
+        }
+        if (dateOfBirth.isAfter(LocalDate.now())) {
+            throw new IllegalArgumentException("Date of birth cannot be in the future!");
+        }
+        if (status == null) {
+            throw new IllegalArgumentException("Status cannot be null!");
+        }
+
         this.digitalIdNumber = digitalIdNumber;
-        this.firstName = firstName;
-        this.lastName = lastName;
+        this.firstName = firstName.trim();
+        this.lastName = lastName.trim();
         this.dateOfBirth = dateOfBirth;
         this.status = status;
         this.createdDate = LocalDateTime.now();

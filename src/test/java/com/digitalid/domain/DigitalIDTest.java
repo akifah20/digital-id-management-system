@@ -7,6 +7,7 @@ import org.junit.jupiter.api.Test;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 
 /**
  * Unit tests for DigitalID entity, where entity = unique identity that we care
@@ -63,5 +64,76 @@ class DigitalIDTest {
         assertNotNull(id.getCreatedDate());
         assertNotNull(id.getLastModifiedDate());
         assertEquals(id.getCreatedDate(), id.getLastModifiedDate());
+    }
+
+    // === Validation tests ===
+
+    @Test
+    void shouldRejectNullFirstName() {
+        assertThrows(IllegalArgumentException.class,
+            () -> new DigitalID(null, "Husssain", LocalDate.of(1990, 1, 15)));
+    }
+
+    @Test
+    void shouldRejectEmptyFirstName() {
+        assertThrows(IllegalArgumentException.class,
+            () -> new DigitalID("", "Husssain", LocalDate.of(1990, 1, 15)));
+    }
+
+    @Test
+    void shouldRejectBlankFirstName() {
+        assertThrows(IllegalArgumentException.class,
+            () -> new DigitalID("   ", "Husssain", LocalDate.of(1990, 1, 15)));
+    }
+
+    @Test
+    void shouldRejectNullLastName() {
+        assertThrows(IllegalArgumentException.class,
+            () -> new DigitalID("Hana", null, LocalDate.of(1990, 1, 15)));
+    }
+
+    @Test
+    void shouldRejectEmptyLastName() {
+        assertThrows(IllegalArgumentException.class,
+            () -> new DigitalID("Hana", "", LocalDate.of(1990, 1, 15)));
+    }
+
+    @Test
+    void shouldRejectNullDateOfBirth() {
+        assertThrows(IllegalArgumentException.class,
+            () -> new DigitalID("Hana", "Husssain", null));
+    }
+
+    @Test
+    void shouldRejectFutureDateOfBirth() {
+        LocalDate tomorrow = LocalDate.now().plusDays(1);
+        assertThrows(IllegalArgumentException.class,
+            () -> new DigitalID("Hana", "Husssain", tomorrow));
+    }
+
+    @Test
+    void shouldRejectNullDigitalIdNumber() {
+        assertThrows(IllegalArgumentException.class,
+            () -> new DigitalID(null, "Hana", "Husssain", LocalDate.of(1990, 1, 15), Status.ACTIVE));
+    }
+
+    @Test
+    void shouldRejectEmptyDigitalIdNumber() {
+        assertThrows(IllegalArgumentException.class,
+            () -> new DigitalID("", "Hana", "Husssain", LocalDate.of(1990, 1, 15), Status.ACTIVE));
+    }
+
+    @Test
+    void shouldRejectNullStatus() {
+        assertThrows(IllegalArgumentException.class,
+            () -> new DigitalID("DID-123", "Hana", "Husssain", LocalDate.of(1990, 1, 15), null));
+    }
+
+    @Test
+    void shouldTrimWhitespaceFromNames() {
+        DigitalID id = new DigitalID("  Hana  ", "  Husssain  ", LocalDate.of(1990, 1, 15));
+
+        assertEquals("Hana", id.getFirstName());
+        assertEquals("Husssain", id.getLastName());
     }
 }

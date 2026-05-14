@@ -1,5 +1,6 @@
 package com.digitalid.domain;
 
+import java.util.Objects;
 import java.util.UUID;
 
 public class Organisation {
@@ -54,5 +55,35 @@ public class Organisation {
 
     public OrganisationType getType() {
         return type;
+    }
+
+    /**
+     * Convenience helper that delegates to the type.
+     *
+     * @return true if this organisation can create, update, or change status of
+     *         identities
+     */
+    public boolean canManageIdentities() {
+        return type.canManageIdentities();
+    }
+
+    @Override
+    public boolean equals(Object other) {
+        if (this == other)
+            return true;
+        if (other == null || getClass() != other.getClass())
+            return false;
+        Organisation that = (Organisation) other;
+        return Objects.equals(id, that.id);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(id);
+    }
+
+    @Override
+    public String toString() {
+        return String.format("Organisation{id='%s', name='%s', type=%s}", id, name, type);
     }
 }

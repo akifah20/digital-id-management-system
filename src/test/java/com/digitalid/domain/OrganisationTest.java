@@ -3,9 +3,11 @@ package com.digitalid.domain;
 import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertNotEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 /**
  * Unit tests for Organisation entity.
@@ -86,5 +88,64 @@ class OrganisationTest {
     void shouldTrimWhitespaceFromName() {
         Organisation org = new Organisation("  HMRC  ", OrganisationType.TAX_AUTHORITY);
         assertEquals("HMRC", org.getName());
+    }
+
+    // canManageIdentities helper
+
+    @Test
+    void centralAuthorityShouldManageIdentities() {
+        Organisation org = new Organisation("Home Office", OrganisationType.CENTRAL_AUTHORITY);
+        assertTrue(org.canManageIdentities());
+    }
+
+    @Test
+    void otherOrganisationsShouldNotManageIdentities() {
+        Organisation bank = new Organisation("Halifax", OrganisationType.BANK);
+        Organisation tax = new Organisation("HMRC", OrganisationType.TAX_AUTHORITY);
+
+        assertFalse(bank.canManageIdentities());
+        assertFalse(tax.canManageIdentities());
+    }
+
+    // check if orgs + hashcode are equal/ comparison
+    @Test
+    void organisationsWithSameIdShouldBeEqual() {
+        Organisation org1 = new Organisation("org-123", "HMRC", OrganisationType.TAX_AUTHORITY);
+        Organisation org2 = new Organisation("org-123", "HMRC", OrganisationType.TAX_AUTHORITY);
+
+        assertEquals(org1, org2);
+        assertEquals(org1.hashCode(), org2.hashCode());
+    }
+
+    @Test
+    void organisationsWithDifferentIdsShouldNotBeEqual() {
+        Organisation org1 = new Organisation("org-123", "HMRC", OrganisationType.TAX_AUTHORITY);
+        Organisation org2 = new Organisation("org-456", "HMRC", OrganisationType.TAX_AUTHORITY);
+
+        assertNotEquals(org1, org2);
+    }
+
+    @Test
+    void organisationShouldEqualItself() {
+        Organisation org = new Organisation("HMRC", OrganisationType.TAX_AUTHORITY);
+        assertEquals(org, org);
+    }
+
+    @Test
+    void organisationShouldNotEqualNull() {
+        Organisation org = new Organisation("HMRC", OrganisationType.TAX_AUTHORITY);
+        assertNotEquals(org, null);
+    }
+
+    // toString test
+
+    @Test
+    void toStringShouldContainKeyFields() {
+        Organisation org = new Organisation("org-123", "HMRC", OrganisationType.TAX_AUTHORITY);
+        String result = org.toString();
+
+        assertTrue(result.contains("org-123"));
+        assertTrue(result.contains("HMRC"));
+        assertTrue(result.contains("TAX_AUTHORITY"));
     }
 }

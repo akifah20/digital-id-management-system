@@ -4,14 +4,15 @@ import java.time.LocalDate;
 
 import com.digitalid.domain.DigitalID;
 import com.digitalid.domain.Organisation;
+import com.digitalid.domain.Status;
+import com.digitalid.exception.IdentityNotFoundException;
 import com.digitalid.repository.IdentityRepository;
 
-//Service tht manages the ID life-cycle (creates updates and changes status of IDs)
+//Service tht manages the ID life-cycle (creates updates & changes status of IDs)
 /**
- * This service coordinates the repository, validation, and authorisation
+ * This service coordinates the repo, validation, & authorisation
  * services. It receives its dependencies via the constructor (Dependency
- * Injection), so it can be tested with fake dependencies and the storage
- * layer can be swapped without changing this service.
+ * Injection), so it can be tested with fake dependencies.
  */
 public class IdentityManagementService {
 
@@ -53,6 +54,45 @@ public class IdentityManagementService {
         DigitalID identity = new DigitalID(firstName, lastName, dateOfBirth); // Create the ID
         repository.save(identity); // saves itt
 
+        return identity;
+    }
+
+    // Updates first & last name of an existing ID.
+    // Both fields are optional - when empty it leaves the field unchanged.
+    public DigitalID updateName(String digitalIdNumber, String firstName, String lastName,
+            Organisation requestor) {
+        authorizationService.checkCanUpdate(requestor);
+
+        DigitalID identity = repository.findById(digitalIdNumber)
+                .orElseThrow(() -> IdentityNotFoundException.forIdNumber(digitalIdNumber));
+
+        validationService.validateUpdateAllowed(identity);
+
+        if (firstName != null) {
+            validationService.validateName(firstName, "First name");
+            identity.updateFirstName(firstName);
+        }
+        if (lastName != null) {
+            validationService.validateName(lastName, "Last name");
+            identity.updateLastName(lastName);
+        }
+
+        repository.save(identity);
+        return identity;
+    }
+
+    // Changes status of an existing ID.
+    public DigitalID changeStatus(String digitalIdNumber, Status newStatus,
+            Organisation requestor) {
+        authorizationService.checkCanChangeStatus(requestor);
+
+        DigitalID identity = repository.findById(digitalIdNumber)
+                .orElseThrow(() -> IdentityNotFoundException.forIdNumber(digitalIdNumber));
+
+        validationService.validateStatusTransition(identity, newStatus);
+
+        identity.changeStatus(newStatus);
+        repository.save(identity);
         return identity;
     }
 }

@@ -10,6 +10,7 @@ import com.digitalid.domain.Organisation;
 import com.digitalid.domain.OrganisationType;
 import com.digitalid.domain.Status;
 import com.digitalid.exception.AuthorizationException;
+import com.digitalid.exception.IdentityNotFoundException;
 import com.digitalid.exception.ValidationException;
 import com.digitalid.repository.InMemoryIdentityRepository;
 

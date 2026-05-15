@@ -6,6 +6,7 @@ import java.time.LocalDateTime;
 import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertNotEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertThrows;
@@ -281,5 +282,98 @@ class DigitalIDTest {
         id.updateFirstName("Hannah");
 
         assertTrue(id.getLastModifiedDate().isAfter(before));
+    }
+
+    // === getFullName tests ===
+
+    @Test
+    void shouldReturnFullName() {
+        DigitalID id = new DigitalID("Hana", "Husssain", LocalDate.of(1990, 1, 15));
+
+        assertEquals("Hana Husssain", id.getFullName());
+    }
+
+    @Test
+    void getFullNameShouldReflectUpdates() {
+        DigitalID id = new DigitalID("Hana", "Husssain", LocalDate.of(1990, 1, 15));
+
+        id.updateFirstName("Hannah");
+        id.updateLastName("Hussain");
+
+        assertEquals("Hannah Hussain", id.getFullName());
+    }
+
+    // === isValid tests ===
+
+    @Test
+    void shouldBeValidWhenActive() {
+        DigitalID id = new DigitalID("Hana", "Husssain", LocalDate.of(1990, 1, 15));
+
+        assertTrue(id.isValid());
+    }
+
+    @Test
+    void shouldNotBeValidWhenSuspended() {
+        DigitalID id = new DigitalID("Hana", "Husssain", LocalDate.of(1990, 1, 15));
+        id.changeStatus(Status.SUSPENDED);
+
+        assertFalse(id.isValid());
+    }
+
+    @Test
+    void shouldNotBeValidWhenRevoked() {
+        DigitalID id = new DigitalID("DID-12345678", "Hana", "Husssain",
+                LocalDate.of(1990, 1, 15), Status.REVOKED);
+
+        assertFalse(id.isValid());
+    }
+
+    @Test
+    void digitalIdsWithSameNumberShouldBeEqual() {
+        DigitalID id1 = new DigitalID("DID-12345678", "Hana", "Husssain",
+                LocalDate.of(1990, 1, 15), Status.ACTIVE);
+        DigitalID id2 = new DigitalID("DID-12345678", "Different", "Names",
+                LocalDate.of(1990, 1, 15), Status.SUSPENDED);
+
+        assertEquals(id1, id2);
+        assertEquals(id1.hashCode(), id2.hashCode());
+    }
+
+    @Test
+    void digitalIdsWithDifferentNumbersShouldNotBeEqual() {
+        DigitalID id1 = new DigitalID("DID-11111111", "Hana", "Husssain",
+                LocalDate.of(1990, 1, 15), Status.ACTIVE);
+        DigitalID id2 = new DigitalID("DID-22222222", "Hana", "Husssain",
+                LocalDate.of(1990, 1, 15), Status.ACTIVE);
+
+        assertNotEquals(id1, id2);
+    }
+
+    @Test
+    void digitalIdShouldEqualItself() {
+        DigitalID id = new DigitalID("Hana", "Husssain", LocalDate.of(1990, 1, 15));
+
+        assertEquals(id, id);
+    }
+
+    @Test
+    void digitalIdShouldNotEqualNull() {
+        DigitalID id = new DigitalID("Hana", "Husssain", LocalDate.of(1990, 1, 15));
+
+        assertNotEquals(id, null);
+    }
+
+    // === toString test ===
+
+    @Test
+    void toStringShouldContainKeyFields() {
+        DigitalID id = new DigitalID("DID-12345678", "Hana", "Husssain",
+                LocalDate.of(1990, 1, 15), Status.ACTIVE);
+        String result = id.toString();
+
+        assertTrue(result.contains("DID-12345678"));
+        assertTrue(result.contains("Hana"));
+        assertTrue(result.contains("Husssain"));
+        assertTrue(result.contains("ACTIVE"));
     }
 }

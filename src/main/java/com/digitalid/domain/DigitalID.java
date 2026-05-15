@@ -2,6 +2,7 @@ package com.digitalid.domain;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.util.Objects;
 import java.util.UUID;
 
 /**
@@ -85,6 +86,19 @@ public class DigitalID {
         return lastModifiedDate;
     }
 
+    public String getFullName() {
+        return firstName + " " + lastName;
+    }
+
+    /**
+     * ID is only valid when its status=ACTIVE.
+     *
+     * @return true if ID is currently usable
+     */
+    public boolean isValid() {
+        return status.isUsable();
+    }
+
     /**
      * updates status of this Digital ID.
      * Validates that the transition is allowed using
@@ -140,5 +154,35 @@ public class DigitalID {
 
     private static String generateIdNumber() {
         return "DID-" + UUID.randomUUID().toString().substring(0, 8).toUpperCase();
+    }
+
+    @Override
+    public boolean equals(Object other) {
+        // Same object in memory
+        if (this == other) {
+            return true;
+        }
+        // Null or different type = not equal
+        if (other == null || getClass() != other.getClass()) {
+            return false;
+        }
+        // Convert Object into DigitalID
+        DigitalID that = (DigitalID) other;
+        // Two DigitalIDs are equal if their ID n.os match
+        return Objects.equals(this.digitalIdNumber, that.digitalIdNumber);
+    }
+
+    @Override
+    public int hashCode() {
+        // Hash code based on the unique ID n.o
+        return Objects.hash(digitalIdNumber);
+    }
+
+    @Override
+    public String toString() {
+        // Readable textversion of the obj
+        return String.format(
+                "DigitalID{number='%s', name='%s %s', dob=%s, status=%s}",
+                digitalIdNumber, firstName, lastName, dateOfBirth, status);
     }
 }

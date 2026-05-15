@@ -87,12 +87,14 @@ public class DigitalID {
 
     /**
      * updates status of this Digital ID.
-     * Validates that the transition is allowed using {@link Status#canChangeTo(Status)}.
+     * Validates that the transition is allowed using
+     * {@link Status#canChangeTo(Status)}.
      *
      * @param newStatus the new status
      * @throws IllegalArgumentException if newStatus is null
-     * @throws IllegalStateException if the transition is not allowed
-     *         (e.g. trying to update a REVOKED ID, or moving to the same state)
+     * @throws IllegalStateException    if the transition is not allowed
+     *                                  (e.g. trying to update a REVOKED ID, or
+     *                                  moving to the same state)
      */
     public void changeStatus(Status newStatus) {
         if (newStatus == null) {
@@ -100,10 +102,40 @@ public class DigitalID {
         }
         if (!status.canChangeTo(newStatus)) {
             throw new IllegalStateException(
-                String.format("Cannot change status from %s to %s", status, newStatus));
+                    String.format("Cannot change status from %s to %s", status, newStatus));
         }
         this.status = newStatus;
         this.lastModifiedDate = LocalDateTime.now();
+    }
+
+    // Updates first name of this ID. Cannot be done if ID is in terminal state
+    // (REVOKED/EXPIRED).
+    public void updateFirstName(String firstName) {
+        checkNotTerminal();
+        if (firstName == null || firstName.trim().isEmpty()) {
+            throw new IllegalArgumentException("First name cannot be null or empty");
+        }
+        this.firstName = firstName.trim();
+        this.lastModifiedDate = LocalDateTime.now();
+    }
+
+    // Updates last name of this ID. Cannot be done if ID is in terminal
+    // state(REVOKED/EXPIRED).
+    public void updateLastName(String lastName) {
+        checkNotTerminal();
+        if (lastName == null || lastName.trim().isEmpty()) {
+            throw new IllegalArgumentException("Last name cannot be null or empty");
+        }
+        this.lastName = lastName.trim();
+        this.lastModifiedDate = LocalDateTime.now();
+    }
+
+    // makes sure terminal IDs cant be changed.
+    private void checkNotTerminal() {
+        if (status.isTerminal()) {
+            throw new IllegalStateException(
+                    "Cannot update Digital ID in terminal state: " + status);
+        }
     }
 
     private static String generateIdNumber() {

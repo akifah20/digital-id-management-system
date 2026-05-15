@@ -1,6 +1,7 @@
 package com.digitalid.domain;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 
 import org.junit.jupiter.api.Test;
 
@@ -67,8 +68,6 @@ class DigitalIDTest {
         assertEquals(id.getCreatedDate(), id.getLastModifiedDate());
     }
 
-    // === Validation tests ===
-
     @Test
     void shouldRejectNullFirstName() {
         assertThrows(IllegalArgumentException.class,
@@ -124,8 +123,6 @@ class DigitalIDTest {
         assertEquals("Hana", id.getFirstName());
         assertEquals("Husssain", id.getLastName());
     }
-
-    // === changeStatus tests ===
 
     @Test
     void shouldChangeStatusFromActiveToSuspended() {
@@ -184,5 +181,105 @@ class DigitalIDTest {
                 LocalDate.of(1990, 1, 15), Status.EXPIRED);
 
         assertThrows(IllegalStateException.class, () -> id.changeStatus(Status.ACTIVE));
+    }
+
+    @Test
+    void shouldUpdateFirstName() {
+        DigitalID id = new DigitalID("Hana", "Husssain", LocalDate.of(1990, 1, 15));
+
+        id.updateFirstName("Hannah");
+
+        assertEquals("Hannah", id.getFirstName());
+    }
+
+    @Test
+    void shouldUpdateLastName() {
+        DigitalID id = new DigitalID("Hana", "Husssain", LocalDate.of(1990, 1, 15));
+
+        id.updateLastName("Hussain");
+
+        assertEquals("Hussain", id.getLastName());
+    }
+
+    @Test
+    void shouldTrimWhitespaceWhenUpdatingFirstName() {
+        DigitalID id = new DigitalID("Hana", "Husssain", LocalDate.of(1990, 1, 15));
+
+        id.updateFirstName("  Hannah  ");
+
+        assertEquals("Hannah", id.getFirstName());
+    }
+
+    @Test
+    void shouldTrimWhitespaceWhenUpdatingLastName() {
+        DigitalID id = new DigitalID("Hana", "Husssain", LocalDate.of(1990, 1, 15));
+
+        id.updateLastName("  Hussain  ");
+
+        assertEquals("Hussain", id.getLastName());
+    }
+
+    @Test
+    void shouldRejectNullFirstNameOnUpdate() {
+        DigitalID id = new DigitalID("Hana", "Husssain", LocalDate.of(1990, 1, 15));
+
+        assertThrows(IllegalArgumentException.class, () -> id.updateFirstName(null));
+    }
+
+    @Test
+    void shouldRejectEmptyFirstNameOnUpdate() {
+        DigitalID id = new DigitalID("Hana", "Husssain", LocalDate.of(1990, 1, 15));
+
+        assertThrows(IllegalArgumentException.class, () -> id.updateFirstName(""));
+    }
+
+    @Test
+    void shouldRejectNullLastNameOnUpdate() {
+        DigitalID id = new DigitalID("Hana", "Husssain", LocalDate.of(1990, 1, 15));
+
+        assertThrows(IllegalArgumentException.class, () -> id.updateLastName(null));
+    }
+
+    @Test
+    void shouldRejectEmptyLastNameOnUpdate() {
+        DigitalID id = new DigitalID("Hana", "Husssain", LocalDate.of(1990, 1, 15));
+
+        assertThrows(IllegalArgumentException.class, () -> id.updateLastName(""));
+    }
+
+    @Test
+    void shouldRejectFirstNameUpdateOnRevokedId() {
+        DigitalID id = new DigitalID("DID-12345678", "Hana", "Husssain",
+                LocalDate.of(1990, 1, 15), Status.REVOKED);
+
+        assertThrows(IllegalStateException.class, () -> id.updateFirstName("Hannah"));
+    }
+
+    @Test
+    void shouldRejectLastNameUpdateOnRevokedId() {
+        DigitalID id = new DigitalID("DID-12345678", "Hana", "Husssain",
+                LocalDate.of(1990, 1, 15), Status.REVOKED);
+
+        assertThrows(IllegalStateException.class, () -> id.updateLastName("Hussain"));
+    }
+
+    @Test
+    void shouldRejectFirstNameUpdateOnExpiredId() {
+        DigitalID id = new DigitalID("DID-12345678", "Hana", "Husssain",
+                LocalDate.of(1990, 1, 15), Status.EXPIRED);
+
+        assertThrows(IllegalStateException.class, () -> id.updateFirstName("Hannah"));
+    }
+
+    @Test
+    void shouldUpdateLastModifiedDateOnNameUpdate() throws InterruptedException {
+        DigitalID id = new DigitalID("Hana", "Husssain", LocalDate.of(1990, 1, 15));
+        LocalDateTime before = id.getLastModifiedDate();
+
+        Thread.sleep(5);
+
+        id.updateFirstName("Hannah");
+
+        assertTrue(id.getLastModifiedDate().isAfter(before));
     }
 }

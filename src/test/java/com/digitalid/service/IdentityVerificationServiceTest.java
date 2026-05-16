@@ -134,7 +134,7 @@ class IdentityVerificationServiceTest {
 
     @Test
     void employerShouldGetSimpleResponse() {
-        Organisation employer = new Organisation("Acme Inc", OrganisationType.EMPLOYER);
+        Organisation employer = new Organisation("AstraZeneca", OrganisationType.EMPLOYER);
 
         VerificationResponse response = service.verify(activeIdentity.getDigitalIdNumber(), employer);
 

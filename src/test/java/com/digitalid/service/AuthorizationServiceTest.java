@@ -72,7 +72,7 @@ class AuthorizationServiceTest {
 
     @Test
     void employerShouldNotBeAllowedToChangeStatus() {
-        Organisation employer = new Organisation("Acme Inc", OrganisationType.EMPLOYER);
+        Organisation employer = new Organisation("AstraZeneca", OrganisationType.EMPLOYER);
         assertThrows(AuthorizationException.class, () -> service.checkCanChangeStatus(employer));
     }
 

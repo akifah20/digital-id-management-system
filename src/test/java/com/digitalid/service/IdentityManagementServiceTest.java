@@ -10,7 +10,6 @@ import com.digitalid.domain.Organisation;
 import com.digitalid.domain.OrganisationType;
 import com.digitalid.domain.Status;
 import com.digitalid.exception.AuthorizationException;
-import com.digitalid.exception.IdentityNotFoundException;
 import com.digitalid.exception.ValidationException;
 import com.digitalid.repository.InMemoryIdentityRepository;
 
@@ -86,7 +85,6 @@ class IdentityManagementServiceTest {
         try {
             service.createIdentity("Hana", "Husssain", LocalDate.of(1990, 1, 15), bank);
         } catch (AuthorizationException expected) {
-            // expected
         }
 
         assertEquals(0, repository.count());

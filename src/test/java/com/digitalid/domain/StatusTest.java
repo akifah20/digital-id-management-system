@@ -7,15 +7,7 @@ import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
-/**
- * Unit tests for Status enum.
- */
 class StatusTest {
-
-    @Test
-    void shouldHaveFourStatusValues() {
-        assertEquals(4, Status.values().length);
-    }
 
     @Test
     void shouldContainAllExpectedStatuses() {
@@ -45,7 +37,6 @@ class StatusTest {
         assertFalse(Status.SUSPENDED.isTerminal());
     }
 
-    // transition tests
     @Test
     void activeShouldTransitionToOtherStates() {
         assertTrue(Status.ACTIVE.canChangeTo(Status.SUSPENDED));

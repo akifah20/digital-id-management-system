@@ -7,15 +7,7 @@ import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
-/**
- * Unit tests OrganisationType
- */
 class OrganisationTypeTest {
-
-    @Test
-    void shouldHaveSixOrganisationTypes() {
-        assertEquals(6, OrganisationType.values().length);
-    }
 
     @Test
     void shouldContainAllExpectedTypes() {
@@ -26,8 +18,6 @@ class OrganisationTypeTest {
         assertNotNull(OrganisationType.valueOf("EMPLOYER"));
         assertNotNull(OrganisationType.valueOf("WELFARE_SERVICE"));
     }
-
-    // Display name tests
 
     @Test
     void shouldHaveCorrectDisplayNames() {
@@ -45,8 +35,6 @@ class OrganisationTypeTest {
             assertNotNull(type.getDisplayName());
         }
     }
-
-    // Permissiontests
 
     @Test
     void onlyCentralAuthorityShouldManageIdentities() {

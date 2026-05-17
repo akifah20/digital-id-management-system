@@ -63,10 +63,9 @@ public class ConsoleUI {
             }
         }
 
-        System.out.println("\nsee ya :)\n");
+        System.out.println("\n see ya ;) \n");
     }
 
-    // SELECTION menu.
     private boolean showOrganisationMenu() {
         System.out.println("\nSelect your organisation:");
         for (int i = 0; i < AVAILABLE_ORGANISATIONS.size(); i++) {
@@ -95,54 +94,63 @@ public class ConsoleUI {
 
         boolean canManage = currentOrganisation.canManageIdentities();
         if (canManage) {
-            System.out.println("""
+            System.out.println("1. Create a new Digital ID");
+            System.out.println("2. Update a Digital ID");
+            System.out.println("3. Change Digital ID status");
+            System.out.println("4. Verify a Digital ID");
+            System.out.println("5. List all Digital IDs");
+            System.out.println("6. Switch organisation");
+            System.out.println("0. Exit");
 
-            1. Create a new Digital ID
-            2. Update a Digital ID
-            3. Change Digital ID
-            4. Verify a Digital ID
-            5. List all Digital IDs
-            6. Switch organisation 
-            0. Exit
-                    
-            """);
-             
-
-        int option = readInt("option: ", 0, 6);
-
-        switch (option) {
-            case 0:
-                return false;
-            case 1:
-                if (canManage)
+            int option = readInt("option: ", 0, 6);
+            switch (option) {
+                case 0:
+                    return false;
+                case 1:
                     handleCreate();
-                else
-                    System.out.println("Not authorised.");
-                return true;
-            case 2:
-                if (canManage)
+                    return true;
+                case 2:
                     handleUpdate();
-                else
-                    System.out.println("Not authorised.");
-                return true;
-            case 3:
-                if (canManage)
+                    return true;
+                case 3:
                     handleChangeStatus();
-                else
-                    System.out.println("Not authorised.");
-                return true;
-            case 4:
-                handleVerify();
-                return true;
-            case 5:
-                handleList();
-                return true;
-            case 6:
-                currentOrganisation = null;
-                return true;
-            default:
-                System.out.println("Invalid option.");
-                return true;
+                    return true;
+                case 4:
+                    handleVerify();
+                    return true;
+                case 5:
+                    handleList();
+                    return true;
+                case 6:
+                    currentOrganisation = null;
+                    return true;
+                default:
+                    System.out.println("Invalid option.");
+                    return true;
+            }
+        } else {
+            System.out.println("1. Verify a Digital ID");
+            System.out.println("2. List all Digital IDs");
+            System.out.println("3. Switch organisation");
+            System.out.println("0. Exit");
+
+            int option = readInt("option: ", 0, 3);
+            switch (option) {
+                case 0:
+                    return false;
+                case 1:
+                    handleVerify();
+                    return true;
+                case 2:
+                    handleList();
+                    return true;
+                case 3:
+                    currentOrganisation = null;
+                    return true;
+                default:
+                    System.out.println("Invalid option.");
+                    return true;
+            }
         }
     }
 

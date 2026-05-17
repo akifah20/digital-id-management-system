@@ -20,10 +20,6 @@ import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
-/**
- * Integration tests for DigitalIDFacade - to test full system
- * E2E through the Facade yippee
- */
 class DigitalIDFacadeTest {
 
     private DigitalIDFacade facade;

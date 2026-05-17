@@ -1,7 +1,5 @@
 package com.digitalid.exception;
 
-//Thrown when an ID is looked up by ID number does NOT exist in the system.
-
 public class IdentityNotFoundException extends RuntimeException {
 
     public IdentityNotFoundException(String message) {

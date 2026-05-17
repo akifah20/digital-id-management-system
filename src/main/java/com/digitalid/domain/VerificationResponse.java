@@ -5,9 +5,6 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
 
-//Represents response returned from an identity verification request.
-//cant be modified after creation
-
 public class VerificationResponse {
 
     private final boolean valid;
@@ -51,7 +48,7 @@ public class VerificationResponse {
     }
 
     public static Builder builder() {
-        return new Builder(); // customised response.
+        return new Builder();
     }
 
     public static VerificationResponse valid(String digitalIdNumber, Status status) {
@@ -63,7 +60,6 @@ public class VerificationResponse {
                 .build();
     }
 
-    // invalid response
     public static VerificationResponse invalid(String digitalIdNumber, String reason) {
         return builder()
                 .valid(false)

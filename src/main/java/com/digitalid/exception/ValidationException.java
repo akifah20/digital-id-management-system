@@ -1,7 +1,5 @@
 package com.digitalid.exception;
 
-//Thrown when a request fails business validation rules
-
 public class ValidationException extends RuntimeException {
 
     public ValidationException(String message) {

@@ -3,11 +3,6 @@ package com.digitalid.strategy;
 import com.digitalid.domain.DigitalID;
 import com.digitalid.domain.VerificationResponse;
 
-/**
- * Used by orgs tht ONLY need to know whether an ID is
- * currently valid - banks + employers. not see any
- * additional identity attributes/historical INFO.
- */
 public class ValidityCheckStrategy implements IdentityVerificationStrategy {
 
     @Override

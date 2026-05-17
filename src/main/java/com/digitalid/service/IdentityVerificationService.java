@@ -20,14 +20,6 @@ public class IdentityVerificationService {
     private final IdentityVerificationStrategy detailedStrategy;
     private final IdentityVerificationStrategy licensingStrategy;
 
-    /**
-     * 
-     * Constructs the IdentityVerificationService with required dependencies
-     * + initialises default verification strategies.
-     *
-     * @param repository           stores + retrieves ID records
-     * @param authorizationService handles verification permissions
-     */
     public IdentityVerificationService(IdentityRepository repository,
             AuthorizationService authorizationService) {
         if (repository == null) {
@@ -44,18 +36,6 @@ public class IdentityVerificationService {
         this.licensingStrategy = new LicensingVerificationStrategy();
     }
 
-    /**
-     * Verifies an ID for a requesting organisation.
-     * 
-     * @param digitalIdNumber the unique ID n.o to verify
-     * @param requestor       the organisation requesting verification
-     * @return a verification response tailored to the organisation type
-     * @throws com.digitalid.exception.AuthorizationException if the requestor is
-     *                                                        not permitted to
-     *                                                        verify
-     * @throws IdentityNotFoundException                      if no ID exists for
-     *                                                        the given n.o
-     */
     public VerificationResponse verify(String digitalIdNumber, Organisation requestor) {
         authorizationService.checkCanVerify(requestor); // Authorise request
         DigitalID identity = repository.findById(digitalIdNumber) // Find ID
@@ -65,7 +45,6 @@ public class IdentityVerificationService {
         return strategy.verify(identity);
     }
 
-    // selects correct start for given org type
     private IdentityVerificationStrategy selectStrategy(OrganisationType type) {
         switch (type) {
             case TAX_AUTHORITY:

@@ -16,9 +16,6 @@ import com.digitalid.exception.IdentityNotFoundException;
 import com.digitalid.exception.ValidationException;
 import com.digitalid.facade.DigitalIDFacade;
 
-//coords user interaction, menu display, + inputs.
-//operations performed thru the facade
-//presentation layer
 public class ConsoleUI {
 
     private final DigitalIDFacade facade;
@@ -48,9 +45,6 @@ public class ConsoleUI {
         System.out.println();
         System.out.println("  WELCOME TO THE DIGITAL ID MANAGEMENT SYSTEM :) ");
 
-        // No org selected tHEN show the org picker
-        // Org selected THEN show the action menu
-        // if user enters false then it means they want to exit.
         while (true) {
             if (currentOrganisation == null) {
                 if (!showOrganisationMenu()) {
@@ -87,8 +81,6 @@ public class ConsoleUI {
         return true;
     }
 
-    // action menu for the current org.
-    // Returns false if the user wants to exit.
     private boolean showActionMenu() {
         System.out.println("\nWhat would you like to do?");
 

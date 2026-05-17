@@ -7,9 +7,6 @@ import com.digitalid.domain.DigitalID;
 import com.digitalid.domain.Status;
 import com.digitalid.exception.ValidationException;
 
-/**
- * business logic LAYER - apploies validation rules to incoming requests.
- */
 public class ValidationService {
 
     private static final int MIN_NAME_LENGTH = 1;
@@ -56,7 +53,6 @@ public class ValidationService {
         }
     }
 
-    // new status = target status. identity= id being updated
     public void validateStatusTransition(DigitalID identity, Status newStatus) {
         if (identity == null) {
             throw new ValidationException("Identity is required");

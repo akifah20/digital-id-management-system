@@ -5,19 +5,16 @@ import java.util.Optional;
 
 import com.digitalid.domain.DigitalID;
 
-//  Repo contract for storing & retrieving Digital IDs.
-
 public interface IdentityRepository {
-    void save(DigitalID identity); // Saves a Digital ID. If an ID with the same n.o already exists, it is
-                                   // replaced(used for updates).
+    void save(DigitalID identity);
 
-    Optional<DigitalID> findById(String digitalIdNumber);// Finds ID by its ID n.o.
+    Optional<DigitalID> findById(String digitalIdNumber);
 
-    List<DigitalID> findAll(); // Returns all IDs currently stored.
+    List<DigitalID> findAll();
 
-    boolean exists(String digitalIdNumber); // Checks whether an ID with the given n.o exists - returns true if it does
+    boolean exists(String digitalIdNumber);
 
     void delete(String digitalIdNumber);
 
-    int count(); // total n.o of IDs stored
+    int count();
 }

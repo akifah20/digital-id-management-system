@@ -126,8 +126,6 @@ class IdentityVerificationServiceTest {
         Organisation centralAuthority = new Organisation("Home Office", OrganisationType.CENTRAL_AUTHORITY);
 
         VerificationResponse response = service.verify(activeIdentity.getDigitalIdNumber(), centralAuthority);
-
-        // Central auth falls through to the default ValidityCheckStrategy
         assertTrue(response.isValid());
         assertTrue(response.getAdditionalInfo().isEmpty());
     }

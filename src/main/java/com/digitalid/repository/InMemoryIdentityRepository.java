@@ -8,10 +8,6 @@ import java.util.Optional;
 
 import com.digitalid.domain.DigitalID;
 
-/**
- * Stores IDs in a HashMap keyed by ID n.o.
- * Data is lost when the application stops.
- */
 public class InMemoryIdentityRepository implements IdentityRepository {
 
     private final Map<String, DigitalID> storage = new HashMap<>();
@@ -58,10 +54,6 @@ public class InMemoryIdentityRepository implements IdentityRepository {
         return storage.size();
     }
 
-    /**
-     * Test-only utility for clearing all stored IDs
-     * For resetting state btwn tests.
-     */
     public void clear() {
         storage.clear();
     }

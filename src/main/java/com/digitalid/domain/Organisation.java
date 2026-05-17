@@ -4,31 +4,15 @@ import java.util.Objects;
 import java.util.UUID;
 
 public class Organisation {
-    // every org has a unique id, name, & a type(determines what it can do - so
-    // manage identities/only consumes them).
 
     private final String id;
     private final String name;
     private final OrganisationType type;
 
-    /**
-     * Creates a new Organisation with a generated id.
-     *
-     * @param name the name of the organisation
-     * @param type the type of organisation
-     */
     public Organisation(String name, OrganisationType type) {
         this(UUID.randomUUID().toString(), name, type);
     }
 
-    /**
-     * Creates an Organisation with a specific id
-     * 
-     * @param id   the unique identifier
-     * @param name the name of the organisation
-     * @param type the type of organisation
-     * @throws IllegalArgumentException if id/name is null/empty/type is null
-     */
     public Organisation(String id, String name, OrganisationType type) {
         if (id == null || id.trim().isEmpty()) {
             throw new IllegalArgumentException("Organisation id cannot be null or empty! :(");
@@ -57,12 +41,6 @@ public class Organisation {
         return type;
     }
 
-    /**
-     * Convenience helper that delegates to the type.
-     *
-     * @return true if this organisation can create, update, or change status of
-     *         identities
-     */
     public boolean canManageIdentities() {
         return type.canManageIdentities();
     }

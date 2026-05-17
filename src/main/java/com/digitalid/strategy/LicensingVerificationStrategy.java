@@ -4,7 +4,6 @@ import com.digitalid.domain.DigitalID;
 import com.digitalid.domain.Status;
 import com.digitalid.domain.VerificationResponse;
 
-//RENEWEAL of license - Verification strat for driving licence authorities.
 public class LicensingVerificationStrategy implements IdentityVerificationStrategy {
 
     @Override
@@ -12,8 +11,6 @@ public class LicensingVerificationStrategy implements IdentityVerificationStrate
         if (identity == null) {
             throw new IllegalArgumentException("Identity is required");
         }
-
-        // SUSPENDED - temporary restriction
         boolean hasRestriction = identity.getStatus() == Status.SUSPENDED;
         boolean eligibleForLicence = identity.getStatus() == Status.ACTIVE && !hasRestriction;
 

@@ -12,10 +12,6 @@ import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
-/**
- * Unit tests for DigitalID entity, where entity = unique identity that we care
- * abt over time
- */
 class DigitalIDTest {
 
     @Test

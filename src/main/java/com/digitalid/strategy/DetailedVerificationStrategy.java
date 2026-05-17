@@ -4,13 +4,6 @@ import com.digitalid.domain.DigitalID;
 import com.digitalid.domain.Status;
 import com.digitalid.domain.VerificationResponse;
 
-/**
- * returns thorough response.
- *
- * for organs tht need > a simple validity check -
- * e.g tax authorities tht check the identity has been valid
- * over a reporting period, not just at the moment of request.
- */
 public class DetailedVerificationStrategy implements IdentityVerificationStrategy {
 
     @Override

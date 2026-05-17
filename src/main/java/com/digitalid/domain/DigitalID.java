@@ -5,24 +5,17 @@ import java.time.LocalDateTime;
 import java.util.Objects;
 import java.util.UUID;
 
-/**
- * A Digital ID has:digitalIdNumber, dateOfBirth, createdDate,
- * firstName,lastName, status, lastModifiedDate
- */
 public class DigitalID {
 
-    // Immutable
     private final String digitalIdNumber;
     private final LocalDate dateOfBirth;
     private final LocalDateTime createdDate;
 
-    // Mutable as can be updated by central authority
     private String firstName;
     private String lastName;
     private Status status;
     private LocalDateTime lastModifiedDate;
 
-    // Creates a new Digital ID
     public DigitalID(String firstName, String lastName, LocalDate dateOfBirth) {
         this(generateIdNumber(), firstName, lastName, dateOfBirth, Status.ACTIVE);
     }
@@ -90,26 +83,10 @@ public class DigitalID {
         return firstName + " " + lastName;
     }
 
-    /**
-     * ID is only valid when its status=ACTIVE.
-     *
-     * @return true if ID is currently usable
-     */
     public boolean isValid() {
         return status.isUsable();
     }
 
-    /**
-     * updates status of this Digital ID.
-     * Validates that the transition is allowed using
-     * {@link Status#canChangeTo(Status)}.
-     *
-     * @param newStatus the new status
-     * @throws IllegalArgumentException if newStatus is null
-     * @throws IllegalStateException    if the transition is not allowed
-     *                                  (e.g. trying to update a REVOKED ID, or
-     *                                  moving to the same state)
-     */
     public void changeStatus(Status newStatus) {
         if (newStatus == null) {
             throw new IllegalArgumentException("New status cannot be null");
@@ -122,8 +99,6 @@ public class DigitalID {
         this.lastModifiedDate = LocalDateTime.now();
     }
 
-    // Updates first name of this ID. Cannot be done if ID is in terminal state
-    // (REVOKED/EXPIRED).
     public void updateFirstName(String firstName) {
         checkNotTerminal();
         if (firstName == null || firstName.trim().isEmpty()) {
@@ -133,8 +108,6 @@ public class DigitalID {
         this.lastModifiedDate = LocalDateTime.now();
     }
 
-    // Updates last name of this ID. Cannot be done if ID is in terminal
-    // state(REVOKED/EXPIRED).
     public void updateLastName(String lastName) {
         checkNotTerminal();
         if (lastName == null || lastName.trim().isEmpty()) {
@@ -144,7 +117,6 @@ public class DigitalID {
         this.lastModifiedDate = LocalDateTime.now();
     }
 
-    // makes sure terminal IDs cant be changed.
     private void checkNotTerminal() {
         if (status.isTerminal()) {
             throw new IllegalStateException(
@@ -158,29 +130,25 @@ public class DigitalID {
 
     @Override
     public boolean equals(Object other) {
-        // Same object in memory
+
         if (this == other) {
             return true;
         }
-        // Null or different type = not equal
+
         if (other == null || getClass() != other.getClass()) {
             return false;
         }
-        // Convert Object into DigitalID
         DigitalID that = (DigitalID) other;
-        // Two DigitalIDs are equal if their ID n.os match
         return Objects.equals(this.digitalIdNumber, that.digitalIdNumber);
     }
 
     @Override
     public int hashCode() {
-        // Hash code based on the unique ID n.o
         return Objects.hash(digitalIdNumber);
     }
 
     @Override
     public String toString() {
-        // Readable textversion of the obj
         return String.format(
                 "DigitalID{number='%s', name='%s %s', dob=%s, status=%s}",
                 digitalIdNumber, firstName, lastName, dateOfBirth, status);
